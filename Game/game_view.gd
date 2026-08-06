@@ -46,6 +46,7 @@ func _spawn_enemy() -> void:
 	var enemy := enemy_scene.instantiate() as Enemy
 	enemies_container.add_child(enemy)
 	enemy.global_position = _get_random_spawn_position()
+	enemy.configure_patrol_route(_build_patrol_route(enemy.global_position))
 	enemy.enemy_died.connect(_on_enemy_died)
 
 func _get_random_spawn_position() -> Vector2:
@@ -59,6 +60,21 @@ func _get_random_spawn_position() -> Vector2:
 			return Vector2(30, randf_range(30, 610))
 		_: # Right
 			return Vector2(330, randf_range(30, 610))
+
+func _build_patrol_route(origin: Vector2) -> Array[Vector2]:
+	var route: Array[Vector2] = []
+	var patrol_radius := randf_range(45.0, 85.0)
+	var start_angle := randf() * TAU
+	for index in range(4):
+		var offset := Vector2.RIGHT.rotated(start_angle + TAU * float(index) / 4.0) * patrol_radius
+		route.append(_clamp_to_arena(origin + offset))
+	return route
+
+func _clamp_to_arena(point: Vector2) -> Vector2:
+	return Vector2(
+		clampf(point.x, 30.0, 330.0),
+		clampf(point.y, 30.0, 610.0)
+	)
 
 func _on_enemy_died(points: int) -> void:
 	score += points

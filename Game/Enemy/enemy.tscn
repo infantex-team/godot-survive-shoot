@@ -51,7 +51,7 @@ _data = {
 
 [node name="Enemy" type="CharacterBody2D" groups=["enemies"]]
 collision_layer = 2
-collision_mask = 13
+collision_mask = 11
 script = ExtResource("1_enemy_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -69,6 +69,11 @@ collision_mask = 1
 shape = SubResource("CircleShape2D_hitbox")
 
 [node name="AttackTimer" type="Timer" parent="."]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 14.0
+target_desired_distance = 14.0
+avoidance_enabled = true
 
 [node name="HealthBar" type="Node2D" parent="."]
 script = ExtResource("2_health_bar_script")
