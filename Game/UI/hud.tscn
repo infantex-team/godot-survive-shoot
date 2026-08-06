@@ -69,6 +69,33 @@ text = "COINS: 0"
 layout_mode = 2
 alignment = 1
 
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer/SecondBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "LVL: 1"
+
+[node name="VSeparatorLevel" type="Control" parent="MarginContainer/VBoxContainer/SecondBar"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+
+[node name="XPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/SecondBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 12)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 5.0
+step = 1.0
+show_percentage = false
+
+[node name="XPLabel" type="Label" parent="MarginContainer/VBoxContainer/SecondBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "XP: 0/5"
+
+[node name="VSeparatorXP" type="Control" parent="MarginContainer/VBoxContainer/SecondBar"]
+custom_minimum_size = Vector2(18, 0)
+layout_mode = 2
+
 [node name="EnemyLabel" type="Label" parent="MarginContainer/VBoxContainer/SecondBar" unique_id=2063726949]
 unique_name_in_owner = true
 layout_mode = 2

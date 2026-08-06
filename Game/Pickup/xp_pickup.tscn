@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Game/Pickup/xp_pickup.gd" id="1_xp_pickup_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xp_pickup"]
+radius = 5.0
+
+[node name="XPPickup" type="Area2D" groups=["xp_pickups"]]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_xp_pickup_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_xp_pickup")
+
+[node name="Glow" type="Polygon2D" parent="."]
+color = Color(0.15, 0.95, 1, 0.32)
+polygon = PackedVector2Array(0, -9, 9, 0, 0, 9, -9, 0)
+
+[node name="Core" type="Polygon2D" parent="."]
+color = Color(0.55, 1, 1, 1)
+polygon = PackedVector2Array(0, -5, 5, 0, 0, 5, -5, 0)

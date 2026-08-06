@@ -2,6 +2,7 @@ class_name Enemy
 extends CharacterBody2D
 
 signal enemy_died(score_value: int)
+signal xp_reward_dropped(xp_reward: int, drop_position: Vector2)
 
 enum AIState {
 	PATROL,
@@ -28,6 +29,7 @@ void fragment() {
 @export var damage: int = 1
 @export var attack_cooldown: float = 1.0
 @export var score_value: int = 10
+@export var xp_reward: int = 7
 
 @export_category("Movement")
 @export var patrol_speed: float = 70.0
@@ -91,6 +93,7 @@ var _hit_flash_remaining: float = 0.0
 var _hit_flash_material: ShaderMaterial
 var _flash_visuals: Array[CanvasItem] = []
 var _original_visual_materials: Dictionary = {}
+var _has_died: bool = false
 
 func _ready() -> void:
 	_setup_hit_flash()
@@ -109,6 +112,7 @@ func reset_for_pool() -> void:
 	_stop_hit_flash()
 	_collect_flash_visuals()
 	current_hp = max_hp
+	_has_died = false
 	target_player = null
 	state = AIState.PATROL
 	last_known_player_position = global_position
@@ -167,6 +171,8 @@ func configure_patrol_route(points: Array[Vector2]) -> void:
 	_set_move_target(_get_current_patrol_point(), true)
 
 func take_damage(amount: int) -> void:
+	if _has_died:
+		return
 	_start_hit_flash()
 	current_hp -= amount
 	if health_bar and health_bar.has_method("update_health"):
@@ -176,7 +182,11 @@ func take_damage(amount: int) -> void:
 		die()
 
 func die() -> void:
+	if _has_died:
+		return
+	_has_died = true
 	_stop_hit_flash()
+	xp_reward_dropped.emit(xp_reward, global_position)
 	enemy_died.emit(score_value)
 	if is_instance_valid(target_player):
 		target_player.add_coin(1)

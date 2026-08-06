@@ -60,6 +60,8 @@ shape = SubResource("RectangleShape2D_vert_wall")
 
 [node name="Bullets" type="Node2D" parent="." unique_id=2137927411]
 
+[node name="Pickups" type="Node2D" parent="."]
+
 [node name="Player" parent="." unique_id=1807354267 instance=ExtResource("2_player_scene")]
 position = Vector2(180, 320)
 

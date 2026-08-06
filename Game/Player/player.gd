@@ -4,6 +4,8 @@ extends CharacterBody2D
 signal health_changed(current_hp: int, max_hp: int)
 signal ammo_changed(current_ammo: int, max_ammo: int)
 signal coins_changed(coins: int)
+signal xp_changed(current_xp: int, required_xp: int, level: int)
+signal level_changed(level: int)
 signal died
 
 @export var speed: float = 150.0
@@ -11,6 +13,8 @@ signal died
 @export var max_ammo: int = 30
 @export var reload_time: float = 2.0
 @export var shoot_cooldown: float = 0.2
+@export var xp_magnet_radius: float = 90.0
+@export var xp_level_config: XPLevelConfig = preload("res://Game/Player/default_xp_level_config.tres")
 
 @onready var shoot_point: Marker2D = $ShootPoint
 @onready var shoot_timer: Timer = $ShootTimer
@@ -20,6 +24,8 @@ signal died
 var current_hp: int
 var current_ammo: int
 var coins: int = 0
+var level: int = 1
+var current_xp: int = 0
 var is_reloading: bool = false
 var is_dead: bool = false
 
@@ -37,6 +43,7 @@ func _ready() -> void:
 	health_changed.emit(current_hp, max_hp)
 	ammo_changed.emit(current_ammo, max_ammo)
 	coins_changed.emit(coins)
+	xp_changed.emit(current_xp, get_required_xp_for_next_level(), level)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -114,6 +121,28 @@ func take_damage(amount: int) -> void:
 func add_coin(amount: int = 1) -> void:
 	coins += amount
 	coins_changed.emit(coins)
+
+func add_xp(amount: int) -> void:
+	if amount <= 0 or is_dead:
+		return
+	
+	current_xp += amount
+	var leveled := false
+	var required := get_required_xp_for_next_level()
+	while required > 0 and current_xp >= required:
+		current_xp -= required
+		level += 1
+		leveled = true
+		required = get_required_xp_for_next_level()
+	
+	if leveled:
+		level_changed.emit(level)
+	xp_changed.emit(current_xp, required, level)
+
+func get_required_xp_for_next_level() -> int:
+	if not xp_level_config:
+		return 0
+	return xp_level_config.get_required_xp(level)
 
 func die() -> void:
 	if is_dead:
