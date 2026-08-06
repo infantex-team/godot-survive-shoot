@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cgg0ba0ywjlj1"]
+
+[ext_resource type="Script" uid="uid://d1rmacx8vht3g" path="res://Game/game_view.gd" id="1_game_view_script"]
+[ext_resource type="PackedScene" path="res://Game/Player/player.tscn" id="2_player_scene"]
+[ext_resource type="PackedScene" path="res://Game/UI/hud.tscn" id="3_hud_scene"]
+[ext_resource type="PackedScene" path="res://Game/UI/game_over_panel.tscn" id="4_game_over_scene"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_horiz_wall"]
+size = Vector2(360, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vert_wall"]
+size = Vector2(20, 640)
+
+[node name="GameView" type="Node2D" unique_id=959595170]
+script = ExtResource("1_game_view_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=520736175]
+offset_right = 360.0
+offset_bottom = 640.0
+color = Color(0.08, 0.09, 0.12, 1)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=898337346]
+position = Vector2(180, 320)
+
+[node name="Arena" type="Node2D" parent="." unique_id=1044284424]
+
+[node name="TopWall" type="StaticBody2D" parent="Arena" unique_id=472775518 groups=["walls"]]
+position = Vector2(180, -10)
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/TopWall" unique_id=403790403]
+shape = SubResource("RectangleShape2D_horiz_wall")
+
+[node name="BottomWall" type="StaticBody2D" parent="Arena" unique_id=424424087 groups=["walls"]]
+position = Vector2(180, 650)
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/BottomWall" unique_id=1583576777]
+shape = SubResource("RectangleShape2D_horiz_wall")
+
+[node name="LeftWall" type="StaticBody2D" parent="Arena" unique_id=2068443021 groups=["walls"]]
+position = Vector2(-10, 320)
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/LeftWall" unique_id=1576821694]
+shape = SubResource("RectangleShape2D_vert_wall")
+
+[node name="RightWall" type="StaticBody2D" parent="Arena" unique_id=123079113 groups=["walls"]]
+position = Vector2(370, 320)
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/RightWall" unique_id=1149458996]
+shape = SubResource("RectangleShape2D_vert_wall")
+
+[node name="Enemies" type="Node2D" parent="." unique_id=1472049866]
+
+[node name="Bullets" type="Node2D" parent="." unique_id=2137927411]
+
+[node name="Player" parent="." unique_id=1807354267 instance=ExtResource("2_player_scene")]
+position = Vector2(180, 320)
+
+[node name="EnemySpawnTimer" type="Timer" parent="." unique_id=1810299140]
+
+[node name="HUD" parent="." unique_id=1634659139 instance=ExtResource("3_hud_scene")]
+
+[node name="GameOverPanel" parent="." unique_id=575737198 instance=ExtResource("4_game_over_scene")]
