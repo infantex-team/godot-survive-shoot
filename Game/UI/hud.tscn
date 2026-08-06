@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bya0s8sc5dwob"]
 
 [ext_resource type="Script" uid="uid://cohw1cfmh6lv2" path="res://Game/UI/hud.gd" id="1_hud_script"]
 
@@ -16,10 +16,10 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=1138109790]
 script = ExtResource("1_hud_script")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1699866101]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 50.0
@@ -28,14 +28,14 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=198272186]
 layout_mode = 2
 
-[node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1125055567]
 layout_mode = 2
 alignment = 1
 
-[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1809524535]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 16)
 layout_mode = 2
@@ -47,26 +47,39 @@ step = 1.0
 value = 5.0
 show_percentage = false
 
-[node name="VSeparator1" type="Control" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="VSeparator1" type="Control" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1307963654]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="AmmoLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="AmmoLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1511616024]
 unique_name_in_owner = true
 layout_mode = 2
 text = "AMMO: 30/30"
 
-[node name="VSeparator2" type="Control" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="VSeparator2" type="Control" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1361253312]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="CoinLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="CoinLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar" unique_id=231735092]
 unique_name_in_owner = true
 layout_mode = 2
 text = "COINS: 0"
 
-[node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="SecondBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=783549425]
+layout_mode = 2
+alignment = 1
+
+[node name="EnemyLabel" type="Label" parent="MarginContainer/VBoxContainer/SecondBar" unique_id=2063726949]
 unique_name_in_owner = true
 layout_mode = 2
-horizontal_alignment = 1
+text = "ENEMIES: 0/0"
+
+[node name="VSeparator3" type="Control" parent="MarginContainer/VBoxContainer/SecondBar" unique_id=1356350461]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer/SecondBar" unique_id=1508351108]
+unique_name_in_owner = true
+layout_mode = 2
 text = "SCORE: 0"
+horizontal_alignment = 2

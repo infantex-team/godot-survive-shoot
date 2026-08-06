@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d1rmacx8vht3g" path="res://Game/game_view.gd" id="1_game_view_script"]
 [ext_resource type="PackedScene" path="res://Game/Player/player.tscn" id="2_player_scene"]
-[ext_resource type="PackedScene" path="res://Game/UI/hud.tscn" id="3_hud_scene"]
+[ext_resource type="PackedScene" uid="uid://bya0s8sc5dwob" path="res://Game/UI/hud.tscn" id="3_hud_scene"]
 [ext_resource type="PackedScene" path="res://Game/UI/game_over_panel.tscn" id="4_game_over_scene"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_horiz_wall"]

@@ -3,6 +3,7 @@ extends Node2D
 @export var initial_spawn_interval: float = 3.0
 @export var min_spawn_interval: float = 1.0
 @export var spawn_decrease_rate: float = 0.05
+@export var max_enemies: int = 10
 
 @onready var player: Player = $Player
 @onready var hud: HUD = $HUD
@@ -15,6 +16,7 @@ var enemy_scene: PackedScene = preload("res://Game/Enemy/enemy.tscn")
 
 var score: int = 0
 var current_spawn_interval: float
+var current_enemy_count: int = 0
 
 func _ready() -> void:
 	current_spawn_interval = initial_spawn_interval
@@ -43,10 +45,14 @@ func _on_enemy_spawn_timer_timeout() -> void:
 		enemy_spawn_timer.wait_time = current_spawn_interval
 
 func _spawn_enemy() -> void:
+	if current_enemy_count >= max_enemies:
+		return
 	var enemy := enemy_scene.instantiate() as Enemy
 	enemies_container.add_child(enemy)
 	enemy.global_position = _get_random_spawn_position()
 	enemy.configure_patrol_route(_build_patrol_route(enemy.global_position))
+	current_enemy_count += 1
+	hud.update_enemy_count(current_enemy_count, max_enemies)
 	enemy.enemy_died.connect(_on_enemy_died)
 
 func _get_random_spawn_position() -> Vector2:
@@ -79,6 +85,8 @@ func _clamp_to_arena(point: Vector2) -> Vector2:
 func _on_enemy_died(points: int) -> void:
 	score += points
 	hud.update_score(score)
+	current_enemy_count -= 1
+	hud.update_enemy_count(current_enemy_count, max_enemies)
 
 func _on_player_health_changed(current: int, maximum: int) -> void:
 	hud.update_health(current, maximum)

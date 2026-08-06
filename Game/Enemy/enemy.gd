@@ -13,6 +13,15 @@ enum AIState {
 const PLAYER_GROUP := "player"
 const ENEMY_GROUP := "enemies"
 const WALL_COLLISION_MASK := 8
+const HIT_FLASH_DURATION := 0.1
+const HIT_FLASH_SHADER_CODE := """
+shader_type canvas_item;
+
+void fragment() {
+	vec4 base_color = texture(TEXTURE, UV) * COLOR;
+	COLOR = vec4(1.0, 1.0, 1.0, base_color.a);
+}
+"""
 
 @export_category("Combat")
 @export var max_hp: int = 3
@@ -78,16 +87,47 @@ var _path_update_remaining: float = 0.0
 var _current_move_target: Vector2
 var _has_move_target: bool = false
 var _last_facing_direction: Vector2 = Vector2.RIGHT
+var _hit_flash_remaining: float = 0.0
+var _hit_flash_material: ShaderMaterial
+var _flash_visuals: Array[CanvasItem] = []
+var _original_visual_materials: Dictionary = {}
 
 func _ready() -> void:
+	_setup_hit_flash()
+	_ready_connections()
+	reset_for_pool()
+
+func _process(delta: float) -> void:
+	if _hit_flash_remaining <= 0.0:
+		return
+	
+	_hit_flash_remaining -= delta
+	if _hit_flash_remaining <= 0.0:
+		_stop_hit_flash()
+
+func reset_for_pool() -> void:
+	_stop_hit_flash()
+	_collect_flash_visuals()
 	current_hp = max_hp
+	target_player = null
+	state = AIState.PATROL
+	last_known_player_position = global_position
+	_player_in_hitbox = false
+	_patrol_direction = 1
+	_patrol_wait_remaining = 0.0
+	_search_remaining = 0.0
+	_search_retarget_remaining = 0.0
+	_is_searching_area = false
+	_state_time = 0.0
+	_time_since_seen = INF
+	_path_update_remaining = 0.0
+	_current_move_target = global_position
+	_has_move_target = false
+	_last_facing_direction = Vector2.RIGHT.rotated(rotation)
+	velocity = Vector2.ZERO
+	
 	attack_timer.wait_time = attack_cooldown
 	attack_timer.one_shot = true
-	_current_move_target = global_position
-	last_known_player_position = global_position
-	
-	hit_box.body_entered.connect(_on_hitbox_body_entered)
-	hit_box.body_exited.connect(_on_hitbox_body_exited)
 	
 	if navigation_agent:
 		navigation_agent.path_desired_distance = waypoint_reached_distance
@@ -101,6 +141,12 @@ func _ready() -> void:
 	
 	if anim_player.has_animation("walk"):
 		anim_player.play("walk")
+	
+func _ready_connections() -> void:
+	if not hit_box.body_entered.is_connected(_on_hitbox_body_entered):
+		hit_box.body_entered.connect(_on_hitbox_body_entered)
+	if not hit_box.body_exited.is_connected(_on_hitbox_body_exited):
+		hit_box.body_exited.connect(_on_hitbox_body_exited)
 
 func _physics_process(delta: float) -> void:
 	_state_time += delta
@@ -121,6 +167,7 @@ func configure_patrol_route(points: Array[Vector2]) -> void:
 	_set_move_target(_get_current_patrol_point(), true)
 
 func take_damage(amount: int) -> void:
+	_start_hit_flash()
 	current_hp -= amount
 	if health_bar and health_bar.has_method("update_health"):
 		health_bar.update_health(current_hp, max_hp)
@@ -129,10 +176,53 @@ func take_damage(amount: int) -> void:
 		die()
 
 func die() -> void:
+	_stop_hit_flash()
 	enemy_died.emit(score_value)
 	if is_instance_valid(target_player):
 		target_player.add_coin(1)
 	queue_free()
+
+func _setup_hit_flash() -> void:
+	if not _hit_flash_material:
+		var shader := Shader.new()
+		shader.code = HIT_FLASH_SHADER_CODE
+		_hit_flash_material = ShaderMaterial.new()
+		_hit_flash_material.shader = shader
+	_collect_flash_visuals()
+
+func _collect_flash_visuals() -> void:
+	_flash_visuals.clear()
+	_collect_flash_visuals_recursive(self)
+
+func _collect_flash_visuals_recursive(node: Node) -> void:
+	for child in node.get_children():
+		if (child is Sprite2D) or (child is AnimatedSprite2D) or (child is Polygon2D):
+			_flash_visuals.append(child as CanvasItem)
+		_collect_flash_visuals_recursive(child)
+
+func _start_hit_flash() -> void:
+	if _flash_visuals.is_empty():
+		_collect_flash_visuals()
+	
+	if _hit_flash_remaining <= 0.0:
+		_original_visual_materials.clear()
+		for visual in _flash_visuals:
+			if not is_instance_valid(visual):
+				continue
+			_original_visual_materials[visual] = visual.material
+			visual.material = _hit_flash_material
+	
+	_hit_flash_remaining = HIT_FLASH_DURATION
+
+func _stop_hit_flash() -> void:
+	if _hit_flash_remaining <= 0.0 and _original_visual_materials.is_empty():
+		return
+	
+	for visual in _original_visual_materials.keys():
+		if is_instance_valid(visual):
+			visual.material = _original_visual_materials[visual]
+	_original_visual_materials.clear()
+	_hit_flash_remaining = 0.0
 
 func _update_player_memory(delta: float) -> void:
 	if not is_instance_valid(target_player) or target_player.is_dead:
