@@ -61,3 +61,31 @@ The main scene is already configured in `project.godot`, so the project can be r
 - Engine: Godot 4.7
 - Scripting language: GDScript
 - Genre: Top-down survival shooter
+
+## Initial State For Task 1: Level Design Improvement
+
+The current game already includes the core survival shooter loop:
+
+- The player can move, aim, shoot, take damage, reload automatically, collect coins, and die.
+- Enemies spawn over time, patrol, detect the player, chase, attack, take damage, die, and grant score plus coins.
+- The HUD displays health, ammo, coins, score, and active enemy count.
+- Difficulty currently scales by reducing the enemy spawn interval over time.
+- There is no experience, leveling, XP pickup, or level-based progression system yet.
+
+### Feature: Configurable Experience, Leveling, and XP Collection
+
+Task 1 should implement an experience and leveling system for the player.
+
+Requirements:
+
+- Each enemy has a configurable XP reward.
+- When an enemy dies, its XP reward must burst into multiple smaller XP particles or pickups on the screen.
+- The total value of all spawned XP pickups must equal the enemy's configured XP reward.
+- XP pickups should spread outward briefly before becoming collectible.
+- The player has a configurable magnet radius that attracts nearby XP pickups.
+- Collected XP pickups should move toward the player and play a collection effect before being added to the player's XP.
+- The player levels up automatically after reaching the required XP threshold.
+- XP requirements for each level must be stored in configuration data.
+- The system must support gaining enough XP to advance through multiple levels from a single collection.
+- Remaining XP must be preserved after leveling up.
+- The system must support multiple enemies and XP pickups without duplicated rewards or missed collections.
