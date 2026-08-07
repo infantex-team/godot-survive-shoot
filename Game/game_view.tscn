@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cgg0ba0ywjlj1"]
 
 [ext_resource type="Script" uid="uid://d1rmacx8vht3g" path="res://Game/game_view.gd" id="1_game_view_script"]
-[ext_resource type="PackedScene" path="res://Game/Player/player.tscn" id="2_player_scene"]
+[ext_resource type="PackedScene" uid="uid://cmvis5i3b0jog" path="res://Game/Player/player.tscn" id="2_player_scene"]
 [ext_resource type="PackedScene" uid="uid://bya0s8sc5dwob" path="res://Game/UI/hud.tscn" id="3_hud_scene"]
 [ext_resource type="PackedScene" path="res://Game/UI/game_over_panel.tscn" id="4_game_over_scene"]
 
@@ -55,6 +55,8 @@ collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/RightWall" unique_id=1149458996]
 shape = SubResource("RectangleShape2D_vert_wall")
+
+[node name="Pickups" type="Node2D" parent="." unique_id=1175284494]
 
 [node name="Enemies" type="Node2D" parent="." unique_id=1472049866]
 

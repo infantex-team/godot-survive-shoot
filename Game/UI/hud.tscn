@@ -35,7 +35,10 @@ layout_mode = 2
 layout_mode = 2
 alignment = 1
 
-[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1809524535]
+[node name="PlayerContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1658030865]
+layout_mode = 2
+
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/TopBar/PlayerContainer" unique_id=1809524535]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 16)
 layout_mode = 2
@@ -46,6 +49,54 @@ max_value = 5.0
 step = 1.0
 value = 5.0
 show_percentage = false
+
+[node name="XPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/TopBar/PlayerContainer" unique_id=2113278610]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.9481501, 0.9481501, 0.94031376, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+max_value = 5.0
+step = 1.0
+value = 5.0
+show_percentage = false
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/PlayerContainer/XPBar" unique_id=320008099]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 2.0
+offset_top = -7.0
+offset_right = 22.0
+offset_bottom = 7.0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 8
+text = "Lv.1"
+vertical_alignment = 1
+
+[node name="XPLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/PlayerContainer/XPBar" unique_id=1706816223]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -23.0
+offset_top = -7.0
+offset_right = -3.0
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 8
+text = "0/0"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="VSeparator1" type="Control" parent="MarginContainer/VBoxContainer/TopBar" unique_id=1307963654]
 custom_minimum_size = Vector2(10, 0)

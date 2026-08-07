@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://kc68aox64ymu"]
+
+[ext_resource type="Script" uid="uid://027qfq0kkc12" path="res://Game/Pickup/xp_pickup.gd" id="1_xp_pickup_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bullet"]
+radius = 4.0
+
+[node name="XPPickup" type="Area2D" unique_id=794071972 groups=["bullets"]]
+collision_layer = 16
+collision_mask = 32
+script = ExtResource("1_xp_pickup_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=697345418]
+shape = SubResource("CircleShape2D_bullet")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1141685774]
+color = Color(0.47858268, 1, 0.9007562, 1)
+polygon = PackedVector2Array(-0.08596802, -4, 3, 0, 0.04011154, 4, -3, 0)

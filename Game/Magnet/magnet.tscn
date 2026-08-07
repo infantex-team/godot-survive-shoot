@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://c8ykgbvnywj62"]
+
+[ext_resource type="Script" uid="uid://ddei1cwft8ka5" path="res://Game/Magnet/magnet.gd" id="1_2i4xt"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bullet"]
+radius = 35.0
+
+[node name="Magnet" type="Area2D" unique_id=794071972 groups=["bullets"]]
+collision_layer = 32
+collision_mask = 16
+script = ExtResource("1_2i4xt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=697345418]
+shape = SubResource("CircleShape2D_bullet")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1691504920]
+color = Color(1, 0.34901962, 1, 0.078431375)
+polygon = PackedVector2Array(-1, -35, -25, -24, -35, -1, -24, 25, -1, 35, 25, 24, 35, 0, 25, -24)

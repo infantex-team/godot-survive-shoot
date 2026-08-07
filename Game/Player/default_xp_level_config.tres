@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="XPLevelConfig" format=3 uid="uid://dio2bpbdjwjxs"]
+
+[ext_resource type="Script" uid="uid://b5jg1h84k6wsa" path="res://Game/Player/xp_level_config.gd" id="1_ldeyy"]
+
+[resource]
+script = ExtResource("1_ldeyy")
+metadata/_custom_type_script = "uid://b5jg1h84k6wsa"

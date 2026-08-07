@@ -1,30 +1,12 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://baijieh81rl60"]
 
 [ext_resource type="Script" uid="uid://l1b6crd408xw" path="res://Game/Enemy/enemy.gd" id="1_enemy_script"]
 [ext_resource type="Script" uid="uid://g4vnc8raatma" path="res://Game/Enemy/enemy_health_bar.gd" id="2_health_bar_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_enemy"]
-radius = 10.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hitbox"]
 radius = 12.0
-
-[sub_resource type="Animation" id="Animation_walk"]
-resource_name = "walk"
-length = 0.4
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("EnemyVisual:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(1.1, 0.9), Vector2(1, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_idle"]
 resource_name = "idle"
@@ -43,42 +25,56 @@ tracks/0/keys = {
 "values": [Vector2(1, 1), Vector2(1.05, 1.05), Vector2(1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_enemy"]
-_data = {
-"idle": SubResource("Animation_idle"),
-"walk": SubResource("Animation_walk")
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EnemyVisual:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.1, 0.9), Vector2(1, 1)]
 }
 
-[node name="Enemy" type="CharacterBody2D" groups=["enemies"]]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_enemy"]
+_data = {
+&"idle": SubResource("Animation_idle"),
+&"walk": SubResource("Animation_walk")
+}
+
+[node name="Enemy" type="CharacterBody2D" unique_id=1949599201 groups=["enemies"]]
 collision_layer = 2
 collision_mask = 11
 script = ExtResource("1_enemy_script")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1458334727]
 shape = SubResource("CircleShape2D_enemy")
 
-[node name="EnemyVisual" type="Polygon2D" parent="."]
+[node name="EnemyVisual" type="Polygon2D" parent="." unique_id=1833348492]
 color = Color(0.9, 0.25, 0.25, 1)
 polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
 
-[node name="HitBox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="." unique_id=591064720]
 collision_layer = 2
-collision_mask = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=963028402]
 shape = SubResource("CircleShape2D_hitbox")
 
-[node name="AttackTimer" type="Timer" parent="."]
+[node name="AttackTimer" type="Timer" parent="." unique_id=1017905237]
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1970247672]
 path_desired_distance = 14.0
 target_desired_distance = 14.0
 avoidance_enabled = true
 
-[node name="HealthBar" type="Node2D" parent="."]
+[node name="HealthBar" type="Node2D" parent="." unique_id=99720560]
 script = ExtResource("2_health_bar_script")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_enemy")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=51457029]
+libraries/ = SubResource("AnimationLibrary_enemy")

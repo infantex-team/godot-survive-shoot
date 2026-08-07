@@ -1,6 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cmvis5i3b0jog"]
 
 [ext_resource type="Script" uid="uid://cuf68pr0bwl3d" path="res://Game/Player/player.gd" id="1_player_script"]
+[ext_resource type="PackedScene" uid="uid://c8ykgbvnywj62" path="res://Game/Magnet/magnet.tscn" id="2_s3asc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 12.0
@@ -41,30 +42,30 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_player"]
 _data = {
-"idle": SubResource("Animation_idle"),
-"walk": SubResource("Animation_walk")
+&"idle": SubResource("Animation_idle"),
+&"walk": SubResource("Animation_walk")
 }
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_layer = 1
+[node name="Player" type="CharacterBody2D" unique_id=1572589738 groups=["player"]]
 collision_mask = 10
 script = ExtResource("1_player_script")
+xp_magnet_radius = 35.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1963550839]
 shape = SubResource("CircleShape2D_player")
 
-[node name="PlayerVisual" type="Polygon2D" parent="."]
+[node name="Magnet" parent="." unique_id=794071972 instance=ExtResource("2_s3asc")]
+
+[node name="PlayerVisual" type="Polygon2D" parent="." unique_id=654398066]
 color = Color(0.2, 0.85, 0.4, 1)
 polygon = PackedVector2Array(14, 0, -10, -10, -5, 0, -10, 10)
 
-[node name="ShootPoint" type="Marker2D" parent="."]
+[node name="ShootPoint" type="Marker2D" parent="." unique_id=1201180176]
 position = Vector2(16, 0)
 
-[node name="ShootTimer" type="Timer" parent="."]
+[node name="ShootTimer" type="Timer" parent="." unique_id=358151649]
 
-[node name="ReloadTimer" type="Timer" parent="."]
+[node name="ReloadTimer" type="Timer" parent="." unique_id=525851094]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_player")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=834189827]
+libraries/ = SubResource("AnimationLibrary_player")
