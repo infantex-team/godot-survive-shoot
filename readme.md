@@ -62,30 +62,163 @@ The main scene is already configured in `project.godot`, so the project can be r
 - Scripting language: GDScript
 - Genre: Top-down survival shooter
 
-## Initial State For Task 1: Level Design Improvement
+---
 
-The current game already includes the core survival shooter loop:
+# Trial Task 01 – Improve Player XP & Leveling System
 
-- The player can move, aim, shoot, take damage, reload automatically, collect coins, and die.
-- Enemies spawn over time, patrol, detect the player, chase, attack, take damage, die, and grant score plus coins.
-- The HUD displays health, ammo, coins, score, and active enemy count.
-- Difficulty currently scales by reducing the enemy spawn interval over time.
-- There is no experience, leveling, XP pickup, or level-based progression system yet.
+## Trial Context
 
-### Feature: Configurable Experience, Leveling, and XP Collection
+The base survival-shooter gameplay described above already existed before this trial.
 
-Task 1 should implement an experience and leveling system for the player.
+GPT-5.5 was asked to modify the existing project and implement the XP and player-leveling system described below.
 
-Requirements:
+The purpose of the trial was to evaluate whether the AI agent could correctly implement and integrate the requested gameplay functionality in a **single attempt**.
 
-- Each enemy has a configurable XP reward.
-- When an enemy dies, its XP reward must burst into multiple smaller XP particles or pickups on the screen.
-- The total value of all spawned XP pickups must equal the enemy's configured XP reward.
-- XP pickups should spread outward briefly before becoming collectible.
-- The player has a configurable magnet radius that attracts nearby XP pickups.
-- Collected XP pickups should move toward the player and play a collection effect before being added to the player's XP.
-- The player levels up automatically after reaching the required XP threshold.
-- XP requirements for each level must be stored in configuration data.
-- The system must support gaining enough XP to advance through multiple levels from a single collection.
-- Remaining XP must be preserved after leveling up.
-- The system must support multiple enemies and XP pickups without duplicated rewards or missed collections.
+## Initial State
+
+- Initial branch: `master`
+- Initial commit: `<INITIAL_COMMIT_SHA>`
+- Engine: Godot 4.7
+
+Both the GPT-5.5 attempt and the reference implementation were created from the same initial project state.
+
+## AI Model and Test Conditions
+
+- Model: GPT-5.5
+- Attempts: 1
+- Follow-up prompts: None
+- Manual corrections after the AI attempt: None
+
+The AI agent was given one task prompt and was not provided with any additional corrections or follow-up instructions after its initial implementation.
+
+---
+
+## Task
+
+Improve the existing project by implementing a complete XP and player-leveling system with the following requirements:
+
+1. Each enemy should have a configurable XP reward.
+
+2. When an enemy dies, its XP reward should be distributed across multiple XP pickups.
+
+3. The total XP value of all spawned pickups must exactly equal the XP reward of the defeated enemy.
+
+4. XP pickups should briefly spread outward after spawning before becoming collectible.
+
+5. The player should have a configurable magnet radius that attracts nearby XP pickups.
+
+6. When attracted, XP pickups should move toward the player and provide appropriate collection feedback.
+
+7. Collecting enough XP should automatically increase the player's level.
+
+8. XP requirements for each level should be configurable through a reusable data resource rather than being hard-coded in gameplay logic.
+
+9. A single XP collection must be able to trigger multiple level-ups if enough XP is received.
+
+10. Remaining XP after a level-up must be preserved correctly.
+
+11. The system must work correctly when multiple enemies die and multiple XP pickups are active simultaneously, without duplicated or lost XP rewards.
+
+---
+
+# GPT-5.5 Attempt Result
+
+## Overall Result
+
+**MATERIAL FAILURE**
+
+GPT-5.5 implemented a substantial portion of the requested XP and leveling functionality in a single attempt.
+
+The generated implementation included:
+
+- Configurable XP rewards for enemies
+- XP pickup spawning and XP distribution logic
+- XP pickup spread and collection-delay logic
+- Configurable player magnet radius
+- XP pickup attraction toward the player
+- A configurable `XPLevelConfig` resource
+- Player XP and level progression
+- Support for multiple level-ups from a single XP gain
+- Preservation of remaining XP after leveling up
+
+However, the resulting project failed to parse successfully because dependent scripts could not resolve the newly introduced `XPPickup` and `XPLevelConfig` types.
+
+Observed errors included:
+
+```text
+Could not find type "XPPickup"
+Could not find type "XPLevelConfig"
+```
+
+As a result, dependent gameplay scripts could not be loaded and the main gameplay scene could not run.
+
+Because the project was left in a non-runnable state after the single AI attempt, the requested feature could not be functionally validated end-to-end.
+
+We therefore classify the attempt as a **material failure**, even though a substantial portion of the intended gameplay logic was present in the generated code.
+
+---
+
+## Requirement Evaluation
+
+| Requirement | GPT-5.5 Result | Notes |
+| --- | --- | --- |
+| Configurable enemy XP reward | Implemented in generated code | An exported XP reward value was added to enemies |
+| Spawn multiple XP pickups | Implemented in generated code | XP pickup spawning logic was added when enemies die |
+| Preserve total XP value | Implemented in generated code | Distribution logic attempts to preserve the total XP value, but runtime validation was not possible |
+| Spread before collectible | Implemented in generated code | Spread and collectible-delay logic were added, but runtime validation was not possible |
+| Configurable magnet radius | Implemented in generated code | A configurable player magnet radius was added |
+| XP pickup attraction | Implemented in generated code | Pickups check their distance from the player and move toward the player when inside the magnet radius |
+| Automatic player level-up | Implemented in generated code | XP progression and automatic level advancement logic were added |
+| Configurable level requirements | Implemented in generated code | `XPLevelConfig` was introduced as a reusable `Resource` |
+| Multiple level-ups from one XP gain | Implemented in generated code | Repeated level evaluation was implemented using a loop |
+| Preserve remaining XP | Implemented in generated code | XP is reduced by each level requirement instead of being reset |
+| Multiple enemies and pickups without duplicated or lost XP | Not verified | End-to-end runtime validation was not possible |
+| Project parses and runs successfully | **FAIL** | Type-resolution / parse errors prevent the gameplay scene from running |
+
+---
+
+## Failure Analysis
+
+GPT-5.5 demonstrated that it could understand and implement most of the individual requirements of the XP and leveling system.
+
+The primary failure occurred during integration.
+
+The AI introduced new types such as `XPPickup` and `XPLevelConfig`, but the final generated project contained type-resolution / parse errors when these types were referenced by dependent scripts.
+
+Consequently, although much of the expected gameplay logic was generated, the complete project could not be executed.
+
+This is considered a **material failure** because the expected outcome of the task was not simply to generate individual pieces of code, but to produce a working and integrated Godot implementation in a single attempt.
+
+The AI-generated output therefore represents a substantial partial implementation, but not a successfully completed task.
+
+---
+
+## Implementation Observations
+
+### Magnet Detection
+
+The GPT-5.5 implementation uses per-frame distance checks from active XP pickups to determine whether each pickup is inside the player's magnet radius.
+
+The reference implementation uses an `Area2D`-based magnet detection system instead.
+
+This is recorded as an implementation difference rather than an AI failure because the task specification did not require a specific magnet-detection architecture or performance implementation.
+
+### Magnet Visualization
+
+The reference implementation includes a visual representation of the player's magnet area.
+
+The GPT-5.5 implementation does not include this visualization.
+
+This is **not considered a failure**, because visualizing the magnet radius was not explicitly required by the task specification.
+
+---
+
+## Final Assessment
+
+GPT-5.5 successfully generated a substantial portion of the requested XP and player-leveling logic in a single attempt.
+
+However, the generated changes did not produce a runnable and fully integrated Godot project because of type-resolution / parse failures involving the newly introduced types.
+
+As a result, the gameplay feature could not be functionally validated end-to-end.
+
+**Final Result: MATERIAL FAILURE**
