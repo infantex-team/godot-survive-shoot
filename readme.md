@@ -37,3 +37,18 @@ This task adds an experience and leveling system to the existing top-down surviv
 ### Gameplay Impact
 
 Defeating enemies now creates a visible XP burst. After a short spread period, nearby XP pickups are attracted into the player by the magnet radius. Collected XP contributes to level progression, and the player can advance through one or more levels if enough XP is gained at once.
+
+### Magnet Area Solution vs. GPT Distance Polling Assessment
+
+#### Magnet Area Solution Overview
+Instead of having every `XPPickup` manually measure distance to the player every frame, the refactored solution uses a dedicated `Magnet` (`Area2D`) node attached to the player:
+- The `Magnet` node configures a `CircleShape2D` matching the player's magnet radius.
+- When an `XPPickup` enters the magnet area, Godot's physics engine emits the `area_entered` signal.
+- The `Magnet` calls `set_target(player)` on the pickup, instantly triggering the attraction and collection sequence.
+
+#### Key Advantages Over GPT's Distance Polling Approach
+- **Event-Driven Signal vs. $O(N)$ Frame Polling**: GPT's implementation forced every active `XPPickup` on screen to execute `global_position.distance_to()` inside GDScript's `_process(delta)` loop every single frame ($O(N)$ complexity). The `Magnet` solution uses event-driven signals that only fire when a pickup enters magnet range.
+- **Elimination of Costly Math Operations**: GPT's method repeatedly executed square root calculations (`distance_to`) every frame across all pickups, including those far out of reach. The `Magnet` area offloads spatial collision detection directly to Godot's optimized C++ physics server.
+- **Scalability & FPS Stability**: Prevents script bridge call overhead and CPU bottlenecks during large enemy death bursts, ensuring smooth frame rates even with hundreds of concurrent XP drops.
+- **Clean Architectural Decoupling**: Separates spatial proximity detection (`Game/Magnet/magnet.gd`) from pickup lifecycle and collection animations (`Game/Pickup/xp_pickup.gd`).
+
